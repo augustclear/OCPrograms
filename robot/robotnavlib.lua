@@ -19,6 +19,14 @@ local function update_position()
         print(y)
     end
 end
+
+local function get_position()
+    if not _x then
+        update_position()
+    end
+    return _x,_y,_z
+end
+
 --[[
 local function get_nearest_charger()
     local c={x,y,z}
@@ -190,4 +198,5 @@ end
 
 return {
     go_to = go_to,
+    get_position = get_position
 }
