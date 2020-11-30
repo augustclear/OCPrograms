@@ -4,22 +4,19 @@ local component = require("component")
 local io = require("io")
 if not component.isAvailable("modem") then error("A network card is required for this program. Please install.") end
 local modem = component.modem
-
-local ftp = {}
-
-ftp.port = 20 --port to use for transfer and getting
+local port = 20 --port to use for transfer and getting
 
 local fileinfo = {path,contents}
 
-function ftp.open()
-    modem.open(ftp.port)
+local function open()
+    modem.open(port)
 end
 
-function ftp.close()
+local function close()
     modem.close(port)
 end
 
-function ftp.send(file,installpath)
+local function send(file,installpath)
     local data
     local rfile = assert(io.open(file,"r"),"Failed to open existing file to send.")
     fileinfo.contents = rfile:read("*a") --reads the entire file into one gigantic string
@@ -29,13 +26,19 @@ function ftp.send(file,installpath)
     rfile:close()    
 end
 
-function ftp.get(message)
+local function get(message)
+    local _,_,sender,port,_,header,data = require("event").pull("modem")
     print("Got data from computer "..sender..".")
-    fileinfo = serialization.unserialize(message)
+    fileinfo = serialization.unserialize(data)
     local wfile = assert(io.open(fileinfo.path,"w"),"Failed to open new file to receive into.")
     wfile:write(fileinfo.contents) --writes the receivedFileData to file.
     wfile:flush() --ensure all data is written and saved.
     wfile:close()
 end
 
-return ftp
+return {
+    open=open,
+    close=close,
+    send=send,
+    get=get,
+}
