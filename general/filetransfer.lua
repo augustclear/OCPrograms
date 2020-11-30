@@ -1,10 +1,4 @@
-local component = require("component")
-local io = require("io")
-if not component.isAvailable("modem") then error("A network card is required for this program. Please install.") end
-local modem = component.modem
-local port = 20 --port to use for transfer and getting
-print("File Transfer init... Current max packet size is "..modem.maxPacketSize())
-
+robotcomms.lua
 modem.open(port)
 
 local args = {...} --{send/receive,filename}
