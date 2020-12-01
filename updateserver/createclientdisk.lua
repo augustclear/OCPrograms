@@ -5,7 +5,7 @@ fsc = component.filesystem
 
 args = (...)
 
-local setup_files_folder = /usr/setup/
+local setup_files_folder = "/usr/setup/"
 local disk_path = args[1]
 
 local filelist = fsc.list(setup_files_folder)

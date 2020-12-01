@@ -39,8 +39,16 @@ end
 
 --Waits for acknowledgement message
 local function await_ack(server)
-    print("Waiting for acknowledgement from server")
-    event.pull("modem_message",nil,server,ftp_port,"ack",...)
+    print("Waiting for acknowledgement from client")
+    local _,_,_,_,header,message = event.pull("modem_message",nil,server,ftp_port,...)
+    if header == "ack" then
+        return true
+    elseif header == "error" then
+        print(message)
+    else
+        print("Unknown message instead of ack")
+    end
+    return false
 end
 
 --Broadcast file register request
@@ -56,7 +64,7 @@ end
 --Waits for files to be sent from server
 local function await_files(server)
     local header,path,contents
-    while header ~= "ack" do
+    while header ~= "ack" and header ~= "error" do
         _, _, _, _, _, header,path,contents = event.pull("modem_message",nil,server,ftp_port,...)
         if header == "file" then
             print("Writing " .. path .. " to disk")
