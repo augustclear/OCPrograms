@@ -26,7 +26,9 @@ while running do
             end
         end
     elseif header == "update" then
-
+        if serv.is_registered(sender) then
+            
+        end
     end
 end
 
